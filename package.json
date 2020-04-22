@@ -1,5 +1,5 @@
 {
-  "name": "csgotrader-web",
+  "name": "traderbot-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.7.0",
+    "axios": "^0.19.2",
     "bulma": "^0.8.2",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
