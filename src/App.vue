@@ -1,22 +1,23 @@
 <template>
   <div id="app">
-    <RwvHeader />
-    <router-view></router-view>
-    <RwvFooter />
+    <Nav />
+    <router-view/>
   </div>
 </template>
-
 <script>
-import RwvHeader from "@/components/TheHeader";
-import RwvFooter from "@/components/TheFooter";
-
+import Nav from './components/partials/Nav.vue';
 export default {
-  name: "App",
+  name: 'app',
   components: {
-    RwvHeader,
-    RwvFooter
+    Nav
   }
-};
+}
 </script>
-
-<style></style>
+<style lang="scss">
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+</style>

@@ -1,80 +1,78 @@
 <template>
-  <div class="home-page">
-    <div class="banner">
+<div class="home">
+  <section class="hero is-dark">
+    <div class="hero-body">
       <div class="container">
-        <h1 class="logo-font">conduit</h1>
-        <p>A place to share your knowledge.</p>
-      </div>
-    </div>
-    <div class="container page">
-      <div class="row">
-        <div class="col-md-9">
-          <div class="feed-toggle">
-            <ul class="nav nav-pills outline-active">
-              <li v-if="isAuthenticated" class="nav-item">
-                <router-link
-                  :to="{ name: 'home-my-feed' }"
-                  class="nav-link"
-                  active-class="active"
-                >
-                  Your Feed
-                </router-link>
-              </li>
-              <li class="nav-item">
-                <router-link
-                  :to="{ name: 'home' }"
-                  exact
-                  class="nav-link"
-                  active-class="active"
-                >
-                  Global Feed
-                </router-link>
-              </li>
-              <li class="nav-item" v-if="tag">
-                <router-link
-                  :to="{ name: 'home-tag', params: { tag } }"
-                  class="nav-link"
-                  active-class="active"
-                >
-                  <i class="ion-pound"></i> {{ tag }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
-          <router-view></router-view>
-        </div>
-        <div class="col-md-3">
-          <div class="sidebar">
-            <p>Popular Tags</p>
-            <div class="tag-list">
-              <RwvTag v-for="(tag, index) in tags" :name="tag" :key="index">
-              </RwvTag>
-            </div>
-          </div>
+        <h1 class="title">
+          Welcome to the Animal Rescue League
+        </h1>
+        <h2 class="subtitle">
+          Make sure you check out our upcoming events below
+        </h2>
+        <div class="button-block">
+          <button v-if="!$auth.isAuthenticated" @click="login" class="button is-xl is-dark">Sign Up to Browse Events</button>
+          <h3 v-if="$auth.isAuthenticated" class="is-size-3 has-background-dark welcome">Welcome, {{ $auth.user.name }}!</h3>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+  <EventsList />
+</div>
 </template>
-
 <script>
-import { mapGetters } from "vuex";
-import RwvTag from "@/components/VTag";
-import { FETCH_TAGS } from "@/store/actions.type";
-
+import EventsList from '../components/EventsList';
 export default {
-  name: "home",
+  name: 'home',
   components: {
-    RwvTag
+    EventsList
   },
-  mounted() {
-    this.$store.dispatch(FETCH_TAGS);
-  },
-  computed: {
-    ...mapGetters(["isAuthenticated", "tags"]),
-    tag() {
-      return this.$route.params.tag;
+  methods: {
+    // Log the user in
+    login() {
+      this.$auth.loginWithRedirect();
     }
   }
-};
+}
+
 </script>
+<style lang="scss" scoped>
+  .hero {  
+    text-align: center;
+    background-image: url('https://cdn.auth0.com/blog/vue-meetup/event-banner.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 400px;
+  }
+  .hero-body .title {
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.6);
+    padding: 40px 0 20px 0;
+    font-size: 60px;
+  }
+  .subtitle {
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.7);
+    font-size: 30px;
+  }
+  .button-block {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    position: absolute;
+    bottom: -150px;
+    .button {
+      margin-right: 50px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+    .welcome {
+      width: 400px;
+      padding: 10px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  .is-xl {
+    font-size: 1.7rem;
+  }
+</style>
