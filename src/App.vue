@@ -1,23 +1,49 @@
 <template>
-  <div id="app">
-    <Nav />
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <span class="headline">Trader Bot</span>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        text
+        @click="logout"
+      >
+        <span class="mr-2">Log Out</span>
+        <v-icon>mdi-exit-run</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-content>
+      <Main/>
+    </v-content>
+  </v-app>
 </template>
+
 <script>
-import Nav from './components/partials/Nav.vue';
+import Main from './components/Main';
+
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    Nav
-  }
-}
+    Main
+  },
+  methods: {
+    logout() {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
+    }
+  },
+
+  data: () => ({
+    //
+  }),
+};
 </script>
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-</style>
