@@ -1,14 +1,9 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      Manage Bot
     </v-card-title>
+    <v-switch v-model="botStatus" color="green" class="mx-2" :label="`Bot Status`"></v-switch>
     <v-data-table
       :headers="headers"
       :items="items"
@@ -18,12 +13,13 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Wishlist Items</v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn class="mx-2" fab dark color="indigo" small @click="findAll">
             <v-icon dark>mdi-refresh</v-icon>
@@ -38,7 +34,6 @@
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
-
               <v-card-text>
                 <v-container>
                   <v-row>
@@ -79,10 +74,10 @@
 
 <script>
   import axios from 'axios';
-
   export default {
     data: () => ({
       dialog: false,
+      botStatus: false,
       search: '',
       appItems: [{
         text: "CS:GO",
@@ -116,6 +111,13 @@
       dialog (val) {
         val || this.close()
       },
+      botStatus(newValue) {
+        if (newValue === true) {
+          this.startBot();
+        } else {
+          this.stopBot();
+        }
+      }
     },
     created () {
       this.initialize()
@@ -123,10 +125,23 @@
     methods: {
       initialize () {
         this.findAll();
+        this.getBotStatus();
       },
       async findAll() {
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`)
         this.items = response.data;
+      },
+      async getBotStatus() {
+        var response = await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus`)
+        this.botStatus = response.data.value;
+      },
+      async startBot() {
+        await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/start`)
+        await this.getBotStatus();
+      },
+      async stopBot() {
+        await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/stop`)
+        await this.getBotStatus();
       },
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
