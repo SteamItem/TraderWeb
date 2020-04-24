@@ -140,8 +140,13 @@
         await this.getBotStatus();
       },
       async stopBot() {
-        await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/stop`)
-        await this.getBotStatus();
+        const confirmed = await confirm('Are you sure you want to stop the bot?');
+        if (confirmed) {
+          await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/stop`)
+          await this.getBotStatus();
+        } else {
+          this.botStatus = true;
+        }
       },
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
