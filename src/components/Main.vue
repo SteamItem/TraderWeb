@@ -1,5 +1,4 @@
 <template>
-
   <v-card>
     <v-card-title>
       <v-text-field
@@ -26,10 +25,14 @@
             vertical
           ></v-divider>
           <v-spacer></v-spacer>
-          <v-btn color="primary" dark class="mb-2" v-on="on" @click="findAll">Refresh List</v-btn>
+          <v-btn class="mx-2" fab dark color="indigo" small @click="findAll">
+            <v-icon dark>mdi-refresh</v-icon>
+          </v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+              <v-btn class="mx-2" fab dark color="teal" small v-on="on">
+                <v-icon dark>mdi-plus</v-icon>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -39,10 +42,10 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.appid" label="App"></v-text-field>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.appid" label="App" :items="appItems"></v-select>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="6">
                       <v-text-field v-model="editedItem.max_price" label="Max Price"></v-text-field>
                     </v-col>
                   </v-row>
@@ -64,22 +67,11 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <v-btn color="blue" small @click="editItem(item)">Edit</v-btn>
+        <v-btn color="red" small @click="deleteItem(item)">Delete</v-btn>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <template v-slot:item.appid="{ item }">
+        <v-select v-model="item.appid" :items="appItems" disabled></v-select>
       </template>
     </v-data-table>
   </v-card>
@@ -92,6 +84,10 @@
     data: () => ({
       dialog: false,
       search: '',
+      appItems: [{
+        text: "CS:GO",
+        value: 730
+      }],
       headers: [
         { text: 'App', value: 'appid' },
         { text: 'Item Name', value: 'name' },
