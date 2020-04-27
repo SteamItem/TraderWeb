@@ -1,32 +1,57 @@
 <template>
   <v-card>
     <v-card-title>
-      Rollbit History
+      Rollbit
     </v-card-title>
     <v-data-table
-      :headers="headers"
-      :items="items"
-      :search="search"
+      :headers="historyHeaders"
+      :items="historyItems"
+      :search="historySearch"
       sort-by="created_at"
       class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
+          <v-toolbar-title>Rollbit History</v-toolbar-title>
           <v-text-field
-            v-model="search"
+            v-model="historySearch"
             append-icon="mdi-magnify"
             label="Search"
             single-line
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
-          <v-btn class="mx-2" fab dark color="indigo" small @click="findAll">
+          <v-btn class="mx-2" fab dark color="indigo" small @click="historyFindAll">
             <v-icon dark>mdi-refresh</v-icon>
           </v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-checkbox v-model="item.fav" @change="itemFavChange(item.name, item.fav)"></v-checkbox>
+        <v-checkbox v-model="item.fav" @change="historyItemFavChange(item.name, item.fav)"></v-checkbox>
+      </template>
+    </v-data-table>
+    <v-data-table
+      :headers="favHeaders"
+      :items="favItems"
+      :search="favSearch"
+      sort-by="name"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Rollbit Fav</v-toolbar-title>
+          <v-text-field
+            v-model="favSearch"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-btn class="mx-2" fab dark color="indigo" small @click="favFindAll">
+            <v-icon dark>mdi-refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
       </template>
     </v-data-table>
   </v-card>
@@ -36,9 +61,8 @@
   import axios from 'axios';
   export default {
     data: () => ({
-      botStatus: false,
-      search: '',
-      headers: [
+      historySearch: '',
+      historyHeaders: [
         { text: 'Found Date', value: 'created_at' },
         { text: 'Item Name', value: 'name' },
         { text: 'Base Price', value: 'baseprice' },
@@ -46,28 +70,36 @@
         { text: 'Price', value: 'price' },
         { text: 'Fav', value: 'actions', sortable: false },
       ],
-      items: [],
+      favHeaders: [
+        { text: 'Item Name', value: 'name' },
+      ],
+      historyItems: [],
+      favItems: [],
     }),
     created () {
-      this.initialize()
+      this.findAll()
     },
     methods: {
-      initialize () {
-        this.findAll();
+      findAll() {
+        this.historyFindAll();
+        this.favFindAll();
       },
-      async findAll() {
+      async historyFindAll() {
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/rollbit`)
-        this.items = response.data;
+        this.historyItems = response.data;
       },
-      async itemFavChange(itemName, fav) {
+      async favFindAll() {
+        var response = await axios.get(`${process.env.VUE_APP_API_URL}/rollbitFav`)
+        this.favItems = response.data;
+      },
+      async historyItemFavChange(itemName, fav) {
         let postData = {name: itemName};
-        console.log(postData);
         if(fav) {
           await axios.post(`${process.env.VUE_APP_API_URL}/rollbitFav/add`, postData);
         } else {
           await axios.post(`${process.env.VUE_APP_API_URL}/rollbitFav/remove`, postData);
         }
-        await this.findAll();
+        this.findAll();
       }
     },
   }
