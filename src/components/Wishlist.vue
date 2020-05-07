@@ -3,31 +3,23 @@
     <v-card-title>
       Wishlist Manager
     </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :search="search"
-      sort-by="name"
-      class="elevation-1"
-    >
-      <template v-slot:top>
-        <v-toolbar flat color="white">
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-          <v-spacer></v-spacer>
-          <v-btn class="mx-2" fab dark color="indigo" small @click="findAll">
-            <v-icon dark>mdi-refresh</v-icon>
-          </v-btn>
+    <v-form>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-text-field v-model="searchName" label="Name"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-select v-model="searchSite" :items="sites" attach chips label="Site" multiple></v-select>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-select v-model="searchApp" :items="appItems" attach chips label="App" multiple></v-select>
+          </v-col>
+        </v-row>
+        <v-row>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn class="mx-2" fab dark color="teal" small v-on="on">
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
+              <v-btn class="mx-2"  dark color="teal" v-on="on">Create</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -53,7 +45,6 @@
                   </v-row>
                 </v-container>
               </v-card-text>
-
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -61,8 +52,15 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-        </v-toolbar>
-      </template>
+        </v-row>
+      </v-container>
+    </v-form>
+    <v-data-table
+      :headers="headers"
+      :items="searchItems"
+      sort-by="name"
+      class="elevation-1"
+    >
       <template v-slot:item.actions="{ item }">
         <v-btn color="blue" small @click="editItem(item)">Edit</v-btn>
         <v-btn color="red" small @click="deleteItem(item)">Delete</v-btn>
@@ -82,7 +80,9 @@
   export default {
     data: () => ({
       dialog: false,
-      search: '',
+      searchName: null,
+      searchSite: [1, 2],
+      searchApp: [730, 570],
       sites: [{
         text: "Empire",
         value: 1
@@ -105,6 +105,7 @@
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       items: [],
+      searchItems: [],
       editedIndex: -1,
       editedItem: {
         site_id: 0,
@@ -126,17 +127,40 @@
       dialog (val) {
         val || this.close()
       },
+      searchName () {
+        this.filterItems();
+      },
+      searchSite () {
+        this.filterItems();
+      },
+      searchApp () {
+        this.filterItems();
+      }
     },
     created () {
       this.initialize()
     },
     methods: {
-      initialize () {
+      initialize() {
         this.findAll();
       },
       async findAll() {
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`)
+        var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`);
         this.items = response.data;
+        this.filterItems();
+      },
+      filterItems() {
+        var items = this.items;
+        if (this.searchName) {
+          items = items.filter(i => i.name.toLowerCase().includes(this.searchName.toLowerCase()));
+        }
+        if (this.searchSite) {
+          items = items.filter(i => this.searchSite.includes(i.site_id));
+        }
+        if (this.searchApp) {
+          items = items.filter(i => this.searchApp.includes(i.appid));
+        }
+        this.searchItems = items;
       },
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
