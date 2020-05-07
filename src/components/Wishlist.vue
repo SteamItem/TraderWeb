@@ -1,9 +1,8 @@
 <template>
   <v-card>
     <v-card-title>
-      Manage Bot
+      Wishlist Manager
     </v-card-title>
-    <v-switch v-model="botStatus" color="green" class="mx-2" :label="`Bot Status`"></v-switch>
     <v-data-table
       :headers="headers"
       :items="items"
@@ -38,6 +37,9 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="6">
+                      <v-select v-model="editedItem.site_id" label="Site" :items="sites"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
                       <v-select v-model="editedItem.appid" label="App" :items="appItems"></v-select>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
@@ -65,6 +67,9 @@
         <v-btn color="blue" small @click="editItem(item)">Edit</v-btn>
         <v-btn color="red" small @click="deleteItem(item)">Delete</v-btn>
       </template>
+      <template v-slot:item.site_id="{ item }">
+        <v-select v-model="item.site_id" :items="sites" disabled></v-select>
+      </template>
       <template v-slot:item.appid="{ item }">
         <v-select v-model="item.appid" :items="appItems" disabled></v-select>
       </template>
@@ -77,13 +82,23 @@
   export default {
     data: () => ({
       dialog: false,
-      botStatus: false,
       search: '',
+      sites: [{
+        text: "Empire",
+        value: 1
+      },{
+        text: "Rollbit",
+        value: 2
+      }],
       appItems: [{
         text: "CS:GO",
         value: 730
+      },{
+        text: "Dota",
+        value: 570
       }],
       headers: [
+        { text: 'Site', value: 'site_id' },
         { text: 'App', value: 'appid' },
         { text: 'Item Name', value: 'name' },
         { text: 'Max Price', value: 'max_price' },
@@ -92,14 +107,14 @@
       items: [],
       editedIndex: -1,
       editedItem: {
+        site_id: 0,
         appid: 0,
-        name: '',
-        max_price: 0,
+        name: ''
       },
       defaultItem: {
+        site_id: 0,
         appid: 0,
-        name: '',
-        max_price: 0
+        name: ''
       },
     }),
     computed: {
@@ -111,13 +126,6 @@
       dialog (val) {
         val || this.close()
       },
-      botStatus(newValue) {
-        if (newValue === true) {
-          this.startBot();
-        } else {
-          this.stopBot();
-        }
-      }
     },
     created () {
       this.initialize()
@@ -130,23 +138,6 @@
       async findAll() {
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`)
         this.items = response.data;
-      },
-      async getBotStatus() {
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus`)
-        this.botStatus = response.data.value;
-      },
-      async startBot() {
-        await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/start`)
-        await this.getBotStatus();
-      },
-      async stopBot() {
-        const confirmed = await confirm('Are you sure you want to stop the bot?');
-        if (confirmed) {
-          await axios.get(`${process.env.VUE_APP_API_URL}/params/botStatus/stop`)
-          await this.getBotStatus();
-        } else {
-          this.botStatus = true;
-        }
       },
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
@@ -178,6 +169,7 @@
       },
       insert () {
         return axios.post(`${process.env.VUE_APP_API_URL}/wishlistItems`, {
+          site_id: this.editedItem.site_id,
           appid: this.editedItem.appid,
           name: this.editedItem.name,
           max_price: this.editedItem.max_price
@@ -185,6 +177,7 @@
       },
       update() {
         return axios.put(`${process.env.VUE_APP_API_URL}/wishlistItems/${this.editedItem._id}`, {
+          site_id: this.editedItem.site_id,
           appid: this.editedItem.appid,
           name: this.editedItem.name,
           max_price: this.editedItem.max_price
