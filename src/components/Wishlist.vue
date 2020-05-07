@@ -133,7 +133,6 @@
     methods: {
       initialize () {
         this.findAll();
-        this.getBotStatus();
       },
       async findAll() {
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`)

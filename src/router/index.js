@@ -14,6 +14,11 @@ export default new Router({
       name: 'Wishlist',
       component: Wishlist,
       beforeEnter: authGuard
+    }, {
+      path: '/Wishlist',
+      name: 'Wishlist',
+      component: Wishlist,
+      beforeEnter: authGuard
     }
   ]
 })
