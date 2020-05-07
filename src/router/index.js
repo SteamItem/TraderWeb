@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Bot from '@/components/Bot'
 import Wishlist from '@/components/Wishlist'
 import { authGuard } from "@/auth/authGuard";
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/Wishlist',
       name: 'Wishlist',
       component: Wishlist,
+      beforeEnter: authGuard
+    }, {
+      path: '/Bot/:id',
+      name: 'Bot',
+      component: Bot,
       beforeEnter: authGuard
     }
   ]

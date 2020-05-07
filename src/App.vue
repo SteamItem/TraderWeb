@@ -116,9 +116,9 @@
           text: 'Bot Manager',
           model: false,
           children: [
-            { text: 'Empire - Instant', link: '/InstantManage' },
-            { text: 'Empire - Dota', link: '/DotaManage' },
-            { text: 'Rollbit - CS:GO', link: '/RollbitManage' },
+            { text: 'Empire - Instant', link: '/Bot/1' },
+            { text: 'Empire - Dota', link: '/Bot/2' },
+            { text: 'Rollbit - CS:GO', link: '/Bot/3' },
           ],
         },
       ],
