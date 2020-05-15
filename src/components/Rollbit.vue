@@ -76,6 +76,7 @@
       ],
       favHeaders: [
         { text: 'Item Name', value: 'name' },
+        { text: 'Delete', value: 'actions', sortable: false },
       ],
       historyItems: [],
       favItems: [],
