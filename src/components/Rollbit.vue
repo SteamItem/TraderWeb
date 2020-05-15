@@ -74,6 +74,7 @@
         { text: 'Price', value: 'price' },
         { text: 'Fav', value: 'actions', sortable: false },
       ],
+      favSearch: '',
       favHeaders: [
         { text: 'Item Name', value: 'name' },
         { text: 'Delete', value: 'actions', sortable: false },
