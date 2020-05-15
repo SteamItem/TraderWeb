@@ -53,7 +53,10 @@
           </v-btn>
         </v-toolbar>
       </template>
-    </v-data-table>
+      <template v-slot:item.actions="{ item }">
+        <v-btn color="red" small @click="historyItemFavChange(item.name, false)">Delete</v-btn>
+      </template>
+  </v-data-table>
   </v-card>
 </template>
 
