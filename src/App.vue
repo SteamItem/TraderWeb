@@ -121,6 +121,7 @@
             { text: 'Rollbit - CS:GO', link: '/Bot/3' },
           ],
         },
+        { icon: 'mdi-heart', text: 'Rollbit History', link: '/Rollbit' },
       ],
     }),
     methods: {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Bot from '@/components/Bot'
 import Wishlist from '@/components/Wishlist'
+import Rollbit from '@/components/Rollbit'
 import { authGuard } from "@/auth/authGuard";
 
 Vue.use(Router)
@@ -24,6 +25,11 @@ export default new Router({
       path: '/Bot/:id',
       name: 'Bot',
       component: Bot,
+      beforeEnter: authGuard
+    }, {
+      path: '/Rollbit',
+      name: 'Rollbit',
+      component: Rollbit,
       beforeEnter: authGuard
     }
   ]
