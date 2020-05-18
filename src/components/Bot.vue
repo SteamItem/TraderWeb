@@ -18,12 +18,37 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" md="12">
-            <v-textarea auto-grow rows="1" v-model="botParam.cookie" label="Cookie"></v-textarea>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-btn class="mx-2" dark color="teal" @click="save">Save</v-btn>
+          <v-btn class="mx-2" dark color="teal" :loading="saveLoading" @click="save">Save</v-btn>
+          <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on }">
+              <v-btn class="mx-2" dark color="teal" v-on="on">Sign In With Steam</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">Sign In With Steam</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="steamLogin.username" label="Username"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="steamLogin.password" label="Password"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="steamLogin.twoFactorCode" label="Two Factor Code"></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" :loading="signInLoading" @click="signIn">Sign In</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-row>
       </v-container>
     </v-form>
@@ -33,12 +58,24 @@
   import axios from 'axios';
   export default {
     data: () => ({
+      dialog: false,
+      saveLoading: false,
+      signInLoading: false,
       botParam: {
         id: 0,
         name: '',
         worker: false,
-        code: '',
-        cookie: ''
+        code: ''
+      },
+      steamLogin: {
+        username: '',
+        password: '',
+        twoFactorCode: ''
+      },
+      steamLoginDefault: {
+        username: '',
+        password: '',
+        twoFactorCode: ''
       },
     }),
     watch: {
@@ -58,6 +95,13 @@
       initialize() {
         this.getBotParam();
       },
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.steamLogin = Object.assign({}, this.steamLoginDefault)
+          this.signInLoading = false;
+        }, 300)
+      },
       async getBotParam() {
         var id = this.$route.params.id;
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/botParams/${id}`);
@@ -65,13 +109,21 @@
       },
       async save () {
         var id = this.$route.params.id;
-        var response = await axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
+        this.saveLoading = true;
+        await axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
           worker: this.botParam.worker,
-          code: this.botParam.code,
-          cookie: this.botParam.cookie
+          code: this.botParam.code
         });
-        this.botParam = response.data;
-      }
+        this.saveLoading = false;
+        await this.getBotParam();
+      },
+      async signIn () {
+        var id = this.$route.params.id;
+        this.signInLoading = true;
+        await axios.post(`${process.env.VUE_APP_API_URL}/botParams/login/${id}`, this.steamLogin);
+        this.signInLoading = false;
+        this.close()
+      },
     },
   }
 </script>
