@@ -119,6 +119,7 @@
             { text: 'Empire - Instant', link: '/Bot/1' },
             { text: 'Empire - Dota', link: '/Bot/2' },
             { text: 'Rollbit - CS:GO', link: '/Bot/3' },
+            { text: 'Rollbit - CS:GO Logger', link: '/Bot/4' },
           ],
         },
         { icon: 'mdi-heart', text: 'Rollbit History', link: '/Rollbit' },
