@@ -34,6 +34,11 @@
           </v-col>
         </v-row>
         <v-row>
+          <v-col cols="12" md="3">
+            <v-switch v-model="searchRequest.ignore_zero_price" label="Ignore Zero Price" ></v-switch>
+          </v-col>
+        </v-row>
+        <v-row>
           <v-btn class="mx-2" dark color="teal" @click="updateAll" :loading="updateAllLoading">Update All Inventory</v-btn>
           <v-btn class="mx-2" dark color="teal" @click="updateSelected" :loading="updateSelectedLoading">Update Selected Details</v-btn>
           <v-btn class="mx-2" dark color="teal" @click="search" :loading="searchLoading">Search</v-btn>
@@ -73,13 +78,14 @@
     data: () => ({
       searchRequest: {
         name: null,
-        app_id: null,
+        app_id: 730,
         last_days: null,
         exterior: null,
         last_profit_from: null,
         last_profit_to: null,
         history_profit_from: null,
-        history_profit_to: null
+        history_profit_to: null,
+        ignore_zero_price: true
       },
       selected: [],
       updateAllLoading: false,
