@@ -34,8 +34,8 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-btn class="mx-2" dark color="teal" @click="updateAll" :loading="updateAllLoading">Uptate All Inventory</v-btn>
-          <v-btn class="mx-2" dark color="teal" @click="updateSelected" :loading="updateSelectedLoading">Uptate Selected Details</v-btn>
+          <v-btn class="mx-2" dark color="teal" @click="updateAll" :loading="updateAllLoading">Update All Inventory</v-btn>
+          <v-btn class="mx-2" dark color="teal" @click="updateSelected" :loading="updateSelectedLoading">Update Selected Details</v-btn>
           <v-btn class="mx-2" dark color="teal" @click="search" :loading="searchLoading">Search</v-btn>
         </v-row>
       </v-container>

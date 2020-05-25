@@ -19,7 +19,7 @@
         <v-row>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn class="mx-2"  dark color="teal" v-on="on">Create</v-btn>
+              <v-btn class="mx-2" dark color="teal" v-on="on">Create</v-btn>
             </template>
             <v-card>
               <v-card-title>
