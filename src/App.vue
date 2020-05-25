@@ -123,6 +123,7 @@
           ],
         },
         { icon: 'mdi-heart', text: 'Rollbit History', link: '/Rollbit' },
+        { icon: 'mdi-heart', text: 'Profit', link: '/Profit' },
       ],
     }),
     methods: {
