@@ -108,21 +108,29 @@
         this.botParam = response.data;
       },
       async save () {
-        var id = this.$route.params.id;
-        this.saveLoading = true;
-        await axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
-          worker: this.botParam.worker,
-          code: this.botParam.code
+        let that = this;
+        let id = that.$route.params.id;
+        this.saveLoading = that;
+        axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
+          worker: that.botParam.worker,
+          code: that.botParam.code
+        }).then(() => {
+          that.saveLoading = false;
+          that.getBotParam();
+        }).error(() => {
+          that.saveLoading = false;
         });
-        this.saveLoading = false;
-        await this.getBotParam();
       },
       async signIn () {
-        var id = this.$route.params.id;
-        this.signInLoading = true;
-        await axios.post(`${process.env.VUE_APP_API_URL}/botParams/login/${id}`, this.steamLogin);
-        this.signInLoading = false;
-        this.close()
+        let that = this;
+        let id = that.$route.params.id;
+        that.signInLoading = true;
+        axios.post(`${process.env.VUE_APP_API_URL}/botParams/login/${id}`, that.steamLogin).then(() => {
+          that.signInLoading = false;
+          that.close()
+        }).catch(() => {
+          that.signInLoading = false;
+        })
       },
     },
   }
