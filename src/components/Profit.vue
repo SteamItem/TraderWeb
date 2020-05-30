@@ -202,6 +202,7 @@
     methods: {
       search() {
         let that = this;
+        that.selected = [];
         that.searchLoading = true;
         axios.post(`${process.env.VUE_APP_API_URL}/pricEmpire/searchItems`, this.searchRequest).then(response => {
           that.searchLoading = false;
@@ -213,6 +214,7 @@
       },
       updateAll() {
         let that = this;
+        that.selected = [];
         that.updateAllLoading = true;
         axios.get(`${process.env.VUE_APP_API_URL}/pricEmpire/refreshItems`).then(() => {
           that.updateAllLoading = false;
@@ -243,7 +245,6 @@
         this.dialog = false
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
         }, 300)
       },
       insert () {
