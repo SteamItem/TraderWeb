@@ -35,6 +35,12 @@
         </v-row>
         <v-row>
           <v-col cols="12" md="3">
+            <v-text-field v-model="searchRequest.last_price_from" type="number" label="Last Price From"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-text-field v-model="searchRequest.last_price_to" type="number" label="Last Price To"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="3">
             <v-switch v-model="searchRequest.ignore_zero_price" label="Ignore Zero Price" ></v-switch>
           </v-col>
         </v-row>
@@ -121,6 +127,8 @@
         last_profit_to: null,
         history_profit_from: null,
         history_profit_to: null,
+        last_price_from: null,
+        last_price_to: null,
         ignore_zero_price: true
       },
       editedItem: {
