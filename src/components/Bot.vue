@@ -107,17 +107,17 @@
         var response = await axios.get(`${process.env.VUE_APP_API_URL}/botParams/${id}`);
         this.botParam = response.data;
       },
-      async save () {
+      save () {
         let that = this;
         let id = that.$route.params.id;
-        this.saveLoading = that;
+        that.saveLoading = true;
         axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
           worker: that.botParam.worker,
           code: that.botParam.code
         }).then(() => {
           that.saveLoading = false;
           that.getBotParam();
-        }).error(() => {
+        }).catch(() => {
           that.saveLoading = false;
         });
       },
