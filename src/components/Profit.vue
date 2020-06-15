@@ -237,7 +237,7 @@
       },
       showWishlistPopup(item) {
         this.editedItem.name = item.name;
-        this.editedItem.site_id = 0;
+        this.editedItem.site_id = 2;
         this.editedItem.appid = item.app_id;
         this.dialog = true
       },
