@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Bot from '@/components/Bot'
+import BotUser from '@/components/BotUser'
 import Wishlist from '@/components/Wishlist'
+import WishlistItem from '@/components/WishlistItem'
 import Rollbit from '@/components/Rollbit'
 import Profit from '@/components/Profit'
 import { authGuard } from "@/auth/authGuard";
@@ -23,9 +25,19 @@ export default new Router({
       component: Wishlist,
       beforeEnter: authGuard
     }, {
+      path: '/WishlistItem/:id',
+      name: 'WishlistItem',
+      component: WishlistItem,
+      beforeEnter: authGuard
+    }, {
       path: '/Bot/:id',
       name: 'Bot',
       component: Bot,
+      beforeEnter: authGuard
+    }, {
+      path: '/BotUser/:id',
+      name: 'BotUser',
+      component: BotUser,
       beforeEnter: authGuard
     }, {
       path: '/Rollbit',
