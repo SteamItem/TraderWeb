@@ -120,6 +120,7 @@
             { text: 'Empire - TradeLock Logger', link: '/Bot/2' },
             { text: 'Rollbit - CS:GO', link: '/Bot/3' },
             { text: 'Rollbit - CS:GO Logger', link: '/Bot/4' },
+            { text: 'Duelbits - CS:GO', link: '/Bot/5' },
           ],
         },
         { icon: 'mdi-heart', text: 'Rollbit History', link: '/Rollbit' },

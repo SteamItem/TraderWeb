@@ -81,7 +81,7 @@
     data: () => ({
       dialog: false,
       searchName: null,
-      searchSite: [1, 2],
+      searchSite: [1, 2, 3],
       searchApp: [730, 570],
       sites: [{
         text: "Empire",
@@ -89,6 +89,9 @@
       },{
         text: "Rollbit",
         value: 2
+      },{
+        text: "Duelbits",
+        value: 3
       }],
       appItems: [{
         text: "CS:GO",
