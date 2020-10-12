@@ -59,7 +59,8 @@
           case 5:
             botName = "Duelbits - CS:GO";
             break;
-          default: "";
+          default:
+            throw new Error("Invalid bot name");
         }
         return `${botName} - Bot List`
       },
