@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Bot from '@/components/Bot'
+import BotList from '@/components/BotList'
+import BotEdit from '@/components/BotEdit'
 import Wishlist from '@/components/Wishlist'
 import Rollbit from '@/components/Rollbit'
 import Profit from '@/components/Profit'
@@ -23,9 +24,19 @@ export default new Router({
       component: Wishlist,
       beforeEnter: authGuard
     }, {
-      path: '/Bot/:id',
-      name: 'Bot',
-      component: Bot,
+      path: '/BotList/:id',
+      name: 'BotList',
+      component: BotList,
+      beforeEnter: authGuard
+    }, {
+      path: '/BotEdit/:id',
+      name: 'BotEdit',
+      component: BotEdit,
+      beforeEnter: authGuard
+    }, {
+      path: '/BotEdit/:id/botId',
+      name: 'BotEdit',
+      component: BotEdit,
       beforeEnter: authGuard
     }, {
       path: '/Rollbit',

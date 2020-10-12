@@ -6,22 +6,26 @@
     <v-form>
       <v-container>
         <v-row>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="3">
+            <v-text-field v-model="bot.name" label="Name"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="3">
             <v-switch
-              v-model="botParam.worker"
+              v-model="bot.worker"
               label="Working"
               color="green"
+              :disabled="isAdd"
             ></v-switch>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="botParam.code" label="Code"></v-text-field>
+            <v-text-field v-model="bot.code" label="Code" :disabled="isAdd"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-btn class="mx-2" dark color="teal" :loading="saveLoading" @click="save">Save</v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn class="mx-2" dark color="teal" v-on="on">Sign In With Steam</v-btn>
+              <v-btn class="mx-2" dark color="teal" v-on="on" :disabled="isAdd">Sign In With Steam</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -59,10 +63,10 @@
   export default {
     data: () => ({
       dialog: false,
+      isAdd: true,
       saveLoading: false,
       signInLoading: false,
-      botParam: {
-        id: 0,
+      bot: {
         name: '',
         worker: false,
         code: ''
@@ -78,22 +82,39 @@
         twoFactorCode: ''
       },
     }),
-    watch: {
-      '$route.params.id': function () {
-        this.initialize()
-      }
-    },
     computed: {
       pageTitle () {
-        return `${this.botParam.name} - Bot Manager`
+        var id = this.$route.params.id;
+        var botName;
+        switch (id) {
+          case 1:
+            botName = "Empire - Instant";
+            break;
+          case 2:
+            botName = "Empire - TradeLock Logger";
+            break;
+          case 3:
+            botName = "Rollbit - CS:GO";
+            break;
+          case 4:
+            botName = "Rollbit - CS:GO Logger";
+            break;
+          case 5:
+            botName = "Duelbits - CS:GO";
+            break;
+          default: "";
+        }
+        return `${botName} - Bot Edit`
       },
     },
     created () {
+      var botId = this.$route.params.botId;
+      this.isAdd = !botId;
       this.initialize()
     },
     methods: {
       initialize() {
-        this.getBotParam();
+        this.getBot();
       },
       close () {
         this.dialog = false
@@ -102,30 +123,49 @@
           this.signInLoading = false;
         }, 300)
       },
-      async getBotParam() {
-        var id = this.$route.params.id;
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/botParams/${id}`);
-        this.botParam = response.data;
+      async getBot() {
+        var botId = this.$route.params.botId;
+        var response = await axios.get(`${process.env.VUE_APP_API_URL}/bot/${botId}`);
+        this.bot = response.data;
       },
-      save () {
-        let that = this;
-        let id = that.$route.params.id;
-        that.saveLoading = true;
-        axios.put(`${process.env.VUE_APP_API_URL}/botParams/${id}`, {
-          worker: that.botParam.worker,
-          code: that.botParam.code
-        }).then(() => {
-          that.saveLoading = false;
-          that.getBotParam();
-        }).catch(() => {
-          that.saveLoading = false;
+      async save () {
+        if (this.isAdd) {
+          await this.insert();
+        } else {
+          await this.update();
+        }
+      },
+      async insert() {
+        let type = this.$route.params.id;
+        const result = await axios.post(`${process.env.VUE_APP_API_URL}/bot`, {
+          type: type,
+          name: this.bot.name
         });
+        const botId = result._id;
+        this.$router.push({ path: `/BotEdit/${type}/${botId}`});
+      },
+      async update() {
+        let type = this.$route.params.id;
+        let botId = this.$route.params.botId;
+        return axios.put(`${process.env.VUE_APP_API_URL}/bot/${botId}`, {
+          type: type,
+          name: this.bot.name,
+          worker: this.bot.worker,
+          code: this.bot.code
+        });
+      },
+      async delete() {
+        let botId = this.$route.params.botId;
+        const confirmed = await confirm('Are you sure you want to delete this bot?');
+        if (confirmed) {
+          await axios.delete(`${process.env.VUE_APP_API_URL}/bot/${botId}`);
+        }
       },
       async signIn () {
         let that = this;
-        let id = that.$route.params.id;
+        let botId = that.$route.params.botId;
         that.signInLoading = true;
-        axios.post(`${process.env.VUE_APP_API_URL}/botParams/login/${id}`, that.steamLogin).then(() => {
+        axios.post(`${process.env.VUE_APP_API_URL}/bot/login/${botId}`, that.steamLogin).then(() => {
           that.signInLoading = false;
           that.close()
         }).catch(() => {
