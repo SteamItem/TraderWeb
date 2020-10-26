@@ -53,7 +53,8 @@
         this.historyFindAll();
       },
       async historyFindAll() {
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/rollbit`)
+        const token = await this.$auth.getTokenSilently();
+        var response = await axios.get(`/api/rollbit`, { headers: { Authorization: `Bearer ${token}` }})
         this.historyItems = response.data;
       }
     },

@@ -15,7 +15,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Wishlist',
+      name: 'Index',
       component: Wishlist,
       beforeEnter: authGuard
     }, {
@@ -30,12 +30,12 @@ export default new Router({
       beforeEnter: authGuard
     }, {
       path: '/BotEdit/:id',
-      name: 'BotEdit',
+      name: 'CreateBot',
       component: BotEdit,
       beforeEnter: authGuard
     }, {
       path: '/BotEdit/:id/botId',
-      name: 'BotEdit',
+      name: 'EditBot',
       component: BotEdit,
       beforeEnter: authGuard
     }, {

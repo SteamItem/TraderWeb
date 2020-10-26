@@ -74,7 +74,8 @@
       },
       async findAll() {
         var id = this.$route.params.id;
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/botList/${id}`);
+        const token = await this.$auth.getTokenSilently();
+        var response = await axios.get(`/api/bot/list/${id}`, { headers: { Authorization: `Bearer ${token}` }});
         this.items = response.data;
       },
       createBot() {

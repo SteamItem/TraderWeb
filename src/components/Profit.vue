@@ -200,11 +200,12 @@
       },
     },
     methods: {
-      search() {
+      async search() {
         let that = this;
         that.selected = [];
         that.searchLoading = true;
-        axios.post(`${process.env.VUE_APP_API_URL}/pricEmpire/searchItems`, this.searchRequest).then(response => {
+        const token = await this.$auth.getTokenSilently();
+        axios.post(`/api/pricEmpire/searchItems`, this.searchRequest, { headers: { Authorization: `Bearer ${token}` }}).then(response => {
           that.searchLoading = false;
           that.items = response.data;
         }).catch(error => {
@@ -212,22 +213,24 @@
           console.log(error);
         });
       },
-      updateAll() {
+      async updateAll() {
         let that = this;
         that.selected = [];
         that.updateAllLoading = true;
-        axios.get(`${process.env.VUE_APP_API_URL}/pricEmpire/refreshItems`).then(() => {
+        const token = await this.$auth.getTokenSilently();
+        axios.get(`/api/pricEmpire/refreshItems`, { headers: { Authorization: `Bearer ${token}` }}).then(() => {
           that.updateAllLoading = false;
         }).catch(error => {
           that.updateAllLoading = false;
           console.log(error);
         });
       },
-      updateSelected() {
+      async updateSelected() {
         let that = this;
         let selectedIds = that.selected.map(s => s.id);
         that.updateSelectedLoading = true;
-        axios.post(`${process.env.VUE_APP_API_URL}/pricEmpire/refreshItemDetails`, selectedIds).then(() => {
+        const token = await this.$auth.getTokenSilently();
+        axios.post(`/api/pricEmpire/refreshItemDetails`, selectedIds, { headers: { Authorization: `Bearer ${token}` }}).then(() => {
           that.updateSelectedLoading = false;
           that.selected = [];
         }).catch(error => {
@@ -247,13 +250,14 @@
           this.editedItem = Object.assign({}, this.defaultItem)
         }, 300)
       },
-      insert () {
-        return axios.post(`${process.env.VUE_APP_API_URL}/wishlistItems`, {
+      async insert () {
+        const token = await this.$auth.getTokenSilently();
+        return axios.post(`/api/wishlistItems`, {
           site_id: this.editedItem.site_id,
           appid: this.editedItem.appid,
           name: this.editedItem.name,
           max_price: this.editedItem.max_price
-        });
+        }, { headers: { Authorization: `Bearer ${token}` }});
       },
       async save () {
         await this.insert();

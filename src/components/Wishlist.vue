@@ -148,7 +148,8 @@
         this.findAll();
       },
       async findAll() {
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/wishlistItems`);
+        const token = await this.$auth.getTokenSilently();
+        var response = await axios.get(`/api/wishlistItems`, { headers: { Authorization: `Bearer ${token}` }});
         this.items = response.data;
         this.filterItems();
       },
@@ -173,7 +174,8 @@
       async deleteItem (item) {
         const confirmed = await confirm('Are you sure you want to delete this item?');
         if (confirmed) {
-          await axios.delete(`${process.env.VUE_APP_API_URL}/wishlistItems/${item._id}`);
+          const token = await this.$auth.getTokenSilently();
+          await axios.delete(`/api/wishlistItems/${item._id}`, { headers: { Authorization: `Bearer ${token}` }});
           await this.findAll();
         }
       },
@@ -193,21 +195,23 @@
         await this.findAll();
         this.close()
       },
-      insert () {
-        return axios.post(`${process.env.VUE_APP_API_URL}/wishlistItems`, {
+      async insert () {
+        const token = await this.$auth.getTokenSilently();
+        return await axios.post(`/api/wishlistItems`, {
           site_id: this.editedItem.site_id,
           appid: this.editedItem.appid,
           name: this.editedItem.name,
           max_price: this.editedItem.max_price
-        });
+        }, { headers: { Authorization: `Bearer ${token}` }});
       },
-      update() {
-        return axios.put(`${process.env.VUE_APP_API_URL}/wishlistItems/${this.editedItem._id}`, {
+      async update() {
+        const token = await this.$auth.getTokenSilently();
+        return await axios.put(`/api/wishlistItems/${this.editedItem._id}`, {
           site_id: this.editedItem.site_id,
           appid: this.editedItem.appid,
           name: this.editedItem.name,
           max_price: this.editedItem.max_price
-        });
+        }, { headers: { Authorization: `Bearer ${token}` }});
       }
     },
   }

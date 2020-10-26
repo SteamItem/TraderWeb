@@ -126,7 +126,8 @@
       },
       async getBot() {
         var botId = this.$route.params.botId;
-        var response = await axios.get(`${process.env.VUE_APP_API_URL}/bot/${botId}`);
+        const token = await this.$auth.getTokenSilently();
+        var response = await axios.get(`/api/bot/${botId}`, { headers: { Authorization: `Bearer ${token}` }});
         this.bot = response.data;
       },
       async save () {
@@ -138,35 +139,39 @@
       },
       async insert() {
         let type = this.$route.params.id;
-        const result = await axios.post(`${process.env.VUE_APP_API_URL}/bot`, {
+        const token = await this.$auth.getTokenSilently();
+        const result = await axios.post(`/api/bot`, {
           type: type,
           name: this.bot.name
-        });
+        }, { headers: { Authorization: `Bearer ${token}` }});
         const botId = result._id;
         this.$router.push({ path: `/BotEdit/${type}/${botId}`});
       },
       async update() {
         let type = this.$route.params.id;
         let botId = this.$route.params.botId;
-        return axios.put(`${process.env.VUE_APP_API_URL}/bot/${botId}`, {
+        const token = await this.$auth.getTokenSilently();
+        return axios.put(`/api/bot/${botId}`, {
           type: type,
           name: this.bot.name,
           worker: this.bot.worker,
           code: this.bot.code
-        });
+        }, { headers: { Authorization: `Bearer ${token}` }});
       },
       async delete() {
         let botId = this.$route.params.botId;
         const confirmed = await confirm('Are you sure you want to delete this bot?');
         if (confirmed) {
-          await axios.delete(`${process.env.VUE_APP_API_URL}/bot/${botId}`);
+          const token = await this.$auth.getTokenSilently();
+          await axios.delete(`/api/bot/${botId}`, { headers: { Authorization: `Bearer ${token}` }});
         }
       },
       async signIn () {
         let that = this;
         let botId = that.$route.params.botId;
         that.signInLoading = true;
-        axios.post(`${process.env.VUE_APP_API_URL}/bot/login/${botId}`, that.steamLogin).then(() => {
+        const token = await this.$auth.getTokenSilently();
+        axios.post(`/api/bot/login/${botId}`, that.steamLogin, { headers: { Authorization: `Bearer ${token}` }}).then(() => {
           that.signInLoading = false;
           that.close()
         }).catch(() => {
