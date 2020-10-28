@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Rollbit
+      Rollbit History
     </v-card-title>
     <v-data-table
       :headers="historyHeaders"
@@ -12,7 +12,6 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Rollbit History</v-toolbar-title>
           <v-text-field
             v-model="historySearch"
             append-icon="mdi-magnify"

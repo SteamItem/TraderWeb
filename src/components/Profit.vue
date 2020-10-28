@@ -49,38 +49,6 @@
           <v-btn class="mx-2" dark color="teal" @click="updateSelected" :loading="updateSelectedLoading">Update Selected Details</v-btn>
           <v-btn class="mx-2" dark color="teal" @click="search" :loading="searchLoading">Search</v-btn>
         </v-row>
-          <v-dialog v-model="dialog" max-width="500px">
-            <v-card>
-              <v-card-title>
-                <span class="headline">New Item</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.site_id" label="Site" :items="sites"></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select v-model="editedItem.appid" label="App" :items="appItems"></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.max_price" label="Max Price"></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="12">
-                      <v-text-field v-model="editedItem.name" label="Item name"></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
       </v-container>
     </v-form>
     <v-data-table
@@ -117,7 +85,6 @@
   import axios from 'axios';
   export default {
     data: () => ({
-      dialog: false,
       searchRequest: {
         name: null,
         app_id: 730,
@@ -130,16 +97,6 @@
         last_price_from: null,
         last_price_to: null,
         ignore_zero_price: true
-      },
-      editedItem: {
-        site_id: 0,
-        appid: 0,
-        name: ''
-      },
-      defaultItem: {
-        site_id: 0,
-        appid: 0,
-        name: ''
       },
       selected: [],
       updateAllLoading: false,
@@ -194,11 +151,6 @@
         value: "Battle-Scarred"
       }]
     }),
-    watch: {
-      dialog (val) {
-        val || this.close()
-      },
-    },
     methods: {
       async search() {
         let that = this;
@@ -237,31 +189,6 @@
           that.updateSelectedLoading = false;
           console.log(error);
         });
-      },
-      showWishlistPopup(item) {
-        this.editedItem.name = item.name;
-        this.editedItem.site_id = 2;
-        this.editedItem.appid = item.app_id;
-        this.dialog = true
-      },
-      close () {
-        this.dialog = false
-        setTimeout(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-        }, 300)
-      },
-      async insert () {
-        const token = await this.$auth.getTokenSilently();
-        return axios.post(`/api/wishlistItems`, {
-          site_id: this.editedItem.site_id,
-          appid: this.editedItem.appid,
-          name: this.editedItem.name,
-          max_price: this.editedItem.max_price
-        }, { headers: { Authorization: `Bearer ${token}` }});
-      },
-      async save () {
-        await this.insert();
-        this.close()
       },
     },
   }
