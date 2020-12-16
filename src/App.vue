@@ -94,9 +94,9 @@
         <v-icon>mdi-exit-run</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <router-view/>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -109,20 +109,19 @@
       dialog: false,
       drawer: null,
       items: [
-        { icon: 'mdi-heart', text: 'Wishlist Manager', link: '/Wishlist' },
+        { icon: 'mdi-heart', text: 'Home', link: '/' },
         {
           icon: 'mdi-chevron-up',
           'icon-alt': 'mdi-chevron-down',
           text: 'Bot Manager',
           model: false,
           children: [
-            { text: 'Empire - Instant', link: '/Bot/1' },
-            { text: 'Empire - TradeLock Logger', link: '/Bot/2' },
-            { text: 'Rollbit - CS:GO', link: '/Bot/3' },
-            { text: 'Rollbit - CS:GO Logger', link: '/Bot/4' },
+            { text: 'CSGO Empire', link: '/CsGoEmpireBots' },
+            { text: 'Rollbit', link: '/RollbitBots' },
+            { text: 'Duelbits', link: '/DuelbitsBots' },
           ],
         },
-        { icon: 'mdi-heart', text: 'Rollbit History', link: '/Rollbit' },
+        { icon: 'mdi-heart', text: 'Rollbit History', link: '/RollbitHistory' },
         { icon: 'mdi-heart', text: 'Profit', link: '/Profit' },
       ],
     }),
